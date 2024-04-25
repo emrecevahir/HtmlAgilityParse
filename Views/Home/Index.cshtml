@@ -1,0 +1,107 @@
+﻿
+@model ViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        .liste {
+            border: 1px solid antiquewhite;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+       .liste span {
+                margin-right: auto;
+            }
+
+        .Harita {
+            margin-left: auto;
+        }
+
+        .deprem {
+            border: 4px solid antiquewhite;
+            border-radius: 20px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $(".Harita").click(function () {
+                var enlem = $(this).data("enlem");
+                var boylam = $(this).data("boylam");
+                //Google maps enlem ve boylarının eklenmesi
+
+                var iframe = '<iframe src="https://maps.google.com/maps?q=' + enlem + ',' + boylam + '&hl=es;z=14&amp;output=embed"  width="600" height="400" ></iframe>';
+
+                // Popup için div elementi oluşturma
+                var popup = $('<div></div>').css({
+                    'position': 'fixed',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)',
+                    'background-color': 'white',
+                    'padding': '2px',
+                    'border': '2px solid antiquewhite',
+                    'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    
+                }).append(iframe);
+
+                // Popup div'ini sayfaya ekleme
+                $('body').append(popup);
+
+                //Popup kapatma butonu
+                var closeBtn = $('<button class="btn-info">Kapat</button>').css({
+                    'position': 'absolute',
+                    'top': '5px',
+                    'right': '5px',
+                    'padding': '5px 10px',
+                    'color': 'white',
+                   
+                }).appendTo(popup);
+                //Tıklayınca kapatsın
+                closeBtn.click(function () {
+                    popup.remove();
+                });
+            });
+        });
+
+    </script>
+</head>
+
+ <body>
+ 
+
+   
+<div class="text-center">
+    <h3 class="deprem display-4">Son Depremler</h3>
+
+</div>
+    <div>
+        @if (Model != null)
+        {
+            <ol>
+                @for (var i = 0; i < Model.locations.Count; i++)
+                {
+                    <li>
+                        <div class="liste">
+                            <span>@Model.dates[i]</span>
+                            <span>@Model.locations[i]</span>
+                            <span>@Model.enlems[i]</span>
+                            <span>@Model.boylams[i]</span>
+                            <span>@Model.siddets[i] ML</span>
+                            <button class="Harita btn btn-outline-info" id="btnharita" data-enlem="@Model.enlems[i]" data-boylam="@Model.boylams[i]">Harita</button>
+                        </div>
+                    </li>
+                }
+        </ol>
+        }
+    </div>
+    
+</body>
